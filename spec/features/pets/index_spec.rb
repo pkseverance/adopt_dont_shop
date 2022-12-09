@@ -84,7 +84,7 @@ RSpec.describe 'the pets index' do
 
   describe 'As a visitor' do
     describe 'When I visit the pet index page' do
-      it 'Then I seea a link to "Start an Application' do
+      it 'Then I see a link to "Start an Application' do
         visit "/pets"
 
         expect(page).to have_link("Start an Application", href: "/applications/new")
