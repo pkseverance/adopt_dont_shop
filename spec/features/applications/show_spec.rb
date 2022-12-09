@@ -69,7 +69,7 @@ RSpec.describe "Applications Show Page" do
       it "Then I see the names of all pets that this application is for
       (all names of pets should be links to their showpage)" do
         visit "/applications/#{@nigel.id}"
-
+        
         expect(page).to have_link("#{@pet_1.name}", href: "/pets/#{@pet_1.id}")
         expect(page).to have_link("#{@pet_2.name}", href: "/pets/#{@pet_2.id}")
 
@@ -78,8 +78,15 @@ RSpec.describe "Applications Show Page" do
         expect(current_path).to eq("/pets/#{@pet_1.id}")
 
         visit "/applications/#{@patricia.id}"
-
+        
+        
         expect(page).to have_link("#{@pet_1.name}", href: "/pets/#{@pet_1.id}")
+      end
+
+      it "Then I see the application's status, either 'In Progress', 'Pending', 'Accepted', or 'Rejected" do
+        visit "/applications/#{@nigel.id}"
+
+        expect(page).to have_content(@nigel.status)
       end
     end
   end
