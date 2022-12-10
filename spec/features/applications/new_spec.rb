@@ -56,6 +56,13 @@ RSpec.describe 'Application New Form Page' do
           click_button('Submit')
           expect(current_path).to eq("/applications/new")
         end
+
+        it 'And I see a message that I must fill in those fields' do
+          visit '/applications/new'
+          
+          click_button('Submit')
+          expect(page).to have_content("Application not created: Please fill out all fields.")
+        end
       end
     end
   end
