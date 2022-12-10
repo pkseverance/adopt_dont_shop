@@ -11,6 +11,19 @@ require 'rails_helper'
 # - names of all pets that this application is for (all names of pets should be links to their show page)
 # - The Application's status, either "In Progress", "Pending", "Accepted", or "Rejected"
 
+
+# 4. Searching for Pets for an Application
+
+# As a visitor
+# When I visit an application's show page
+# And that application has not been submitted,
+# Then I see a section on the page to "Add a Pet to this Application"
+# In that section I see an input where I can search for Pets by name
+# When I fill in this field with a Pet's name
+# And I click submit,
+# Then I am taken back to the application show page
+# And under the search bar I see any Pet whose name matches my search
+
 RSpec.describe "Applications Show Page" do
   describe "As a visitor" do
     describe "When I visit the applications show page" do
@@ -87,6 +100,61 @@ RSpec.describe "Applications Show Page" do
         visit "/applications/#{@nigel.id}"
 
         expect(page).to have_content(@nigel.status)
+      end
+
+      it 'Then I see a section on page to add a pet to this application' do
+        visit "/applications/#{@nigel.id}"
+
+        expect(page).to have_content('Add a pet to this application')
+        expect(page).to have_field('Search for Pets')
+      end
+
+      it 'Under the search bar I see any Pet whose name matches my search' do
+        visit "/applications/#{@nigel.id}"
+
+        fill_in('Search for Pets', with: "#{@pet_1.name}")
+        click_button('Submit')
+
+        within('section#add_pet') do
+          expect(page).to have_content("#{@pet_1.name}")
+        end
+      end
+
+      it 'Can display other pets' do
+        visit "/applications/#{@nigel.id}"
+
+        fill_in('Search for Pets', with: "#{@pet_2.name}")
+        click_button('Submit')
+
+        within('section#add_pet') do
+          expect(page).to have_content("#{@pet_2.name}")
+        end
+      end
+
+      it 'Tests for partial matches' do
+        visit "/applications/#{@nigel.id}"
+
+        fill_in('Search for Pets', with: "a")
+        click_button('Submit')
+
+        within('section#add_pet') do
+          expect(page).to have_content("#{@pet_1.name}")
+          expect(page).to have_content("#{@pet_2.name}")
+          expect(page).to have_content("#{@pet_3.name}")
+        end
+      end
+
+      it 'Shows nothing if name != any pets' do
+        visit "/applications/#{@nigel.id}"
+
+        fill_in('Search for Pets', with: "Dr. Stinkface")
+        click_button('Submit')
+
+        within('section#add_pet') do
+          expect(page).to_not have_content("#{@pet_1.name}")
+          expect(page).to_not have_content("#{@pet_2.name}")
+          expect(page).to_not have_content("#{@pet_3.name}")
+        end
       end
     end
   end
