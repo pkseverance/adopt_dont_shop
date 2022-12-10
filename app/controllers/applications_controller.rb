@@ -5,11 +5,18 @@ class ApplicationsController < ApplicationController
   end
 
   def new
+    @application
   end
 
   def create
-    new_app = Application.create!(application_params)
-    redirect_to "/applications/#{new_app.id}"
+    binding.pry
+    new_app = Application.new(application_params)
+    if new_app.save
+      redirect_to "/applications/#{new_app.id}"
+    else
+      flash[:notice] = "Application not created: Please fill out all fields."
+      redirect_to "/applications/new"
+    end
   end
 
   private
