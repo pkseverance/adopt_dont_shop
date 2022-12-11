@@ -14,6 +14,14 @@ class ApplicationsController < ApplicationController
     @application = Application.new
   end
 
+  def update
+    app_pet = Pet.find(params[:pet_id])
+    application = Application.find(params[:id])
+    applicationpets = application.pets
+    applicationpets << app_pet
+    application.update_attributes
+  end
+
   def create
     new_app = Application.new(application_params)
     if new_app.save

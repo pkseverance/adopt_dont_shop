@@ -156,6 +156,27 @@ RSpec.describe "Applications Show Page" do
           expect(page).to_not have_content("#{@pet_3.name}")
         end
       end
+
+      it "Next to each Pet's name I see a button to 'Adopt this Pet'" do
+        visit "/applications/#{@nigel.id}"
+
+        fill_in('Search for Pets', with: "#{@pet_3.name}")
+        click_button('Submit')
+        
+        within('section#app_pets') do
+          expect(page).to_not have_content("#{@pet_3.name}")
+        end
+
+        within('section#add_pet') do
+          expect(page).to have_button('Adopt this Pet')
+        end
+
+        click_button('Adopt this Pet')
+
+        within('section#app_pets') do
+          expect(page).to have_content("#{@pet_3.name}")
+        end
+      end
     end
   end
 end
