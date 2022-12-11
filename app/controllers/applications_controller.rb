@@ -11,27 +11,27 @@ class ApplicationsController < ApplicationController
   end
 
   def new
-    # @application = Application.new 
-    # Possibly use this to save form fills when an error occurs and redirects back to this new page
+    @application = Application.new
   end
 
   def create
-    
     new_app = Application.new(application_params)
     if new_app.save
       redirect_to "/applications/#{new_app.id}"
     else
-      flash[:notice] = "Application not created: Please fill out all fields."
-      redirect_to "/applications/new"
-      # render :new
-      # Don't understand the difference between render and redirect
+      flash[:notice] = "Application not created: Required information missing."
+      @application = Application.new(application_params)
+      @application.save
+      render :new
     end
   end
 
   private
 
   def application_params
-    params[:status] = 'In Progress'
-    params.permit(:name, :street, :city, :state, :zip_code, :description, :status)
+    params
+      .require(:application)
+      .permit(:name, :street, :city, :state, :zip_code, :description, :status)
+      .with_defaults(status: 'In Progress')
   end
 end
