@@ -54,14 +54,29 @@ RSpec.describe 'Application New Form Page' do
           visit '/applications/new'
           
           click_button('Submit')
-          expect(current_path).to eq("/applications/new")
+          expect(page).to have_field('Name')
+          expect(page).to have_field('Street Address')
+          expect(page).to have_field('City')
+          expect(page).to have_field('State')
+          expect(page).to have_field('Zip Code')
+          expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
+          expect(page).to have_button('Submit')
         end
 
         it 'And I see a message that I must fill in those fields' do
           visit '/applications/new'
           
           click_button('Submit')
-          expect(page).to have_content("Application not created: Please fill out all fields.")
+          
+          within('#notice') do
+            expect(page).to have_content("Application not created: Required information missing.")
+          end
+          expect(page).to have_content("Name can't be blank")
+          expect(page).to have_content("Street can't be blank")
+          expect(page).to have_content("City can't be blank")
+          expect(page).to have_content("State can't be blank")
+          expect(page).to have_content("Zip code can't be blank")
+          expect(page).to have_content("Description can't be blank")
         end
       end
     end
