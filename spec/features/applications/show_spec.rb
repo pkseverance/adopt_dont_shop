@@ -24,6 +24,22 @@ require 'rails_helper'
 # Then I am taken back to the application show page
 # And under the search bar I see any Pet whose name matches my search
 
+# [ ] done
+
+# 6. Submit an Application
+
+# As a visitor
+# When I visit an application's show page
+# And I have added one or more pets to the application
+# Then I see a section to submit my application
+# And in that section I see an input to enter why I would make a good owner for these pet(s)
+# When I fill in that input
+# And I click a button to submit this application
+# Then I am taken back to the application's show page
+# And I see an indicator that the application is "Pending"
+# And I see all the pets that I want to adopt
+# And I do not see a section to add more pets to this application
+
 RSpec.describe "Applications Show Page" do
   describe "As a visitor" do
     describe "When I visit the applications show page" do
@@ -175,6 +191,80 @@ RSpec.describe "Applications Show Page" do
 
         within('section#app_pets') do
           expect(page).to have_content("#{@pet_3.name}")
+        end
+      end
+    end
+  end
+
+  # As a visitor
+  # When I visit an application's show page
+  # And I have added one or more pets to the application
+  # Then I see a section to submit my application
+  # And in that section I see an input to enter why I would make a good owner for these pet(s)
+  # When I fill in that input
+  # And I click a button to submit this application
+  # Then I am taken back to the application's show page
+  # And I see an indicator that the application is "Pending"
+  # And I see all the pets that I want to adopt
+  # And I do not see a section to add more pets to this application
+
+  describe 'As a visitor' do
+    describe 'When I visit an applications show page' do
+      before :each do
+        @shelter_1 = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
+        @shelter_2 = Shelter.create(name: 'RGV animal shelter', city: 'Harlingen, TX', foster_program: false, rank: 5)
+        @shelter_3 = Shelter.create(name: 'Fancy pets of Colorado', city: 'Denver, CO', foster_program: true, rank: 10)
+        @pet_1 = @shelter_1.pets.create(name: 'Mr. Pirate', breed: 'tuxedo shorthair', age: 5, adoptable: true)
+        @pet_2 = @shelter_1.pets.create(name: 'Clawdia', breed: 'shorthair', age: 3, adoptable: true)
+        @pet_3 = @shelter_3.pets.create(name: 'Lucille Bald', breed: 'sphynx', age: 8, adoptable: true)
+
+        @nigel = Application.create!(
+          name: 'Nigel',
+          street: '1234 Turing Pwky',
+          city: 'San Antonio',
+          state: 'TX',
+          zip_code: 54321,
+          description: 'Loving family with financial stability',
+          status: 'In Progress'
+        )
+        @patricia = Application.create!(
+          name: 'Patricia',
+          street: '4567 Dev Street',
+          city: 'Denver',
+          state: 'CO',
+          zip_code: 98765,
+          description: 'Great with pets.',
+          status: 'Pending'
+        )
+      end
+
+      describe 'And I have added one or more pets to the application' do
+        it 'Then I see a section to submit my application' do
+          visit "/applications/#{@nigel.id}"
+          expect(page).to have_content('In Progress')
+
+          fill_in('Search for Pets', with: "#{@pet_3.name}")
+          click_button('Submit')
+          click_button('Adopt this Pet')
+
+          within('section#submit_app') do
+            expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
+            expect(page).to have_button('Submit Application')
+          end
+
+          fill_in("Description of why you'd be a good home for this pet(s)", with: 'I love pets')
+          click_button('Submit Application')
+
+          expect(current_path).to eq("/applications/#{@nigel.id}")
+          
+          expect(page).to have_content('Pending')
+          expect(page).to have_content('Description: I love pets')
+
+          within('section#app_pets') do
+            expect(page).to have_content("#{@pet_3.name}")
+          end
+
+          expect(page).to_not have_content('Add a pet to this application')
         end
       end
     end
