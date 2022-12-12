@@ -11,7 +11,6 @@ RSpec.describe 'Application New Form Page' do
         expect(page).to have_field('City')
         expect(page).to have_field('State')
         expect(page).to have_field('Zip Code')
-        expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
         expect(page).to have_button('Submit')
       end
 
@@ -24,7 +23,6 @@ RSpec.describe 'Application New Form Page' do
           fill_in('City', with: 'Austin')
           fill_in('State', with: 'TX')
           fill_in('Zip Code', with: 10345)
-          fill_in("Description of why you'd be a good home for this pet(s)", with: 'I love pets')
           click_button('Submit')
 
           @joey = Application.last
@@ -59,7 +57,6 @@ RSpec.describe 'Application New Form Page' do
           expect(page).to have_field('City')
           expect(page).to have_field('State')
           expect(page).to have_field('Zip Code')
-          expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
           expect(page).to have_button('Submit')
         end
 
@@ -76,7 +73,6 @@ RSpec.describe 'Application New Form Page' do
           expect(page).to have_content("City can't be blank")
           expect(page).to have_content("State can't be blank")
           expect(page).to have_content("Zip code can't be blank")
-          expect(page).to have_content("Description can't be blank")
         end
       end
     end
