@@ -240,6 +240,7 @@ RSpec.describe "Applications Show Page" do
 
       describe 'And I have added one or more pets to the application' do
         it 'Then I see a section to submit my application' do
+
           visit "/applications/#{@nigel.id}"
           expect(page).to have_content('In Progress')
 
@@ -265,6 +266,24 @@ RSpec.describe "Applications Show Page" do
           end
 
           expect(page).to_not have_content('Add a pet to this application')
+        end
+      end
+
+      describe 'And I have not added any pets to the application' do
+        it 'Then I do not see a section to submit my application' do
+          visit "/applications/#{@nigel.id}"
+          expect(page).to_not have_content('Finalize Application')
+
+          fill_in('Search for Pets', with: "#{@pet_3.name}")
+          click_button('Submit')
+          click_button('Adopt this Pet')
+
+          expect(page).to have_content('Finalize Application')
+
+          fill_in("Description of why you'd be a good home for this pet(s)", with: 'Pets!!!!')
+          click_button('Submit Application')
+
+          expect(current_path).to eq("/applications/#{@nigel.id}")
         end
       end
     end
