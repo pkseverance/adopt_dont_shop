@@ -163,12 +163,12 @@ RSpec.describe "Applications Show Page" do
         fill_in('Search for Pets', with: "#{@pet_3.name}")
         click_button('Submit')
         
-        within('section#app_pets') do
-          expect(page).to_not have_content("#{@pet_3.name}")
+        within("#add_pet") do
+          expect(page).to have_button('Adopt this Pet')
         end
 
-        within('section#add_pet') do
-          expect(page).to have_button('Adopt this Pet')
+        within('section#app_pets') do
+          expect(page).to_not have_content("#{@pet_3.name}")
         end
 
         click_button('Adopt this Pet')
