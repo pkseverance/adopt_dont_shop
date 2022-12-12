@@ -14,26 +14,39 @@
   <p>Application Status: <%= @application.status %></p>
 </section>
 
-  <section id='app_pets'>
-    <h2>Pets For This Application</h2>
-    <% @applicationpets.each do |pet| %>
-      <p><%= link_to pet.name, "/pets/#{pet.id}" %></p>
+<section id='app_pets'>
+  <h2>Pets For This Application</h2>
+  <% @applicationpets.each do |pet| %>
+    <p><%= link_to pet.name, "/pets/#{pet.id}" %></p>
+  <% end %>
+</section>
+
+<% if @application.status == 'In Progress' %>
+  <section id='add_pet'>
+    <h2>Add a pet to this application</h2>
+    <%= form_with url: "/applications/#{@application.id}", method: :get, local: true do |form| %>
+      <%= form.label :search, 'Search for Pets' %>
+      <%= form.text_field :search %>
+      <%= form.submit 'Submit' %>
+    <% end %>
+
+    <% @search_pets.each do |pet| %>
+        <ul>
+        <li><%= pet.name %></li> 
+        <%= button_to 'Adopt this Pet', "/applications/#{@application.id}", params: {pet_id: pet.id}, method: :patch, local: true %>
+        </ul>
     <% end %>
   </section>
-  
-  <section id='add_pet'>
-  <h2>Add a pet to this application</h2>
-  <%= form_with url: "/applications/#{@application.id}", method: :get, local: true do |form| %>
-    <%= form.label :search, 'Search for Pets' %>
-    <%= form.text_field :search %>
-    <%= form.submit 'Submit' %>
-  <% end %>
+<% end %>
 
-  <% @search_pets.each do |pet| %>
-      <ul>
-      <li><%= pet.name %></li> 
-      <%= button_to 'Adopt this Pet', "/applications/#{@application.id}", params: {pet_id: pet.id}, method: :patch, local: true %>
-      </ul>
+  
+
+<section id='submit_app'>
+  <h2>Finalize Application</h2>
+  <%= form_with model: @application, url: "/applications/#{@application.id}", method: :patch, local: true do |form| %>
+    <%= form.label :description, "Description of why you'd be a good home for this pet(s)" %> <br>
+    <%= form.text_area :description %>
+    <%= form.submit 'Submit Application' %>
   <% end %>
 </section>
 

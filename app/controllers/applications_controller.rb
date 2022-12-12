@@ -15,10 +15,15 @@ class ApplicationsController < ApplicationController
   end
 
   def update
-    app_pet = Pet.find(params[:pet_id])
-    application = Application.find(params[:id])
-    application.pets << app_pet
-    redirect_to "/applications/#{application.id}"
+    @application = Application.find(params[:id])
+    # binding.pry
+    if params[:commit] == "Submit Application"
+      @application.update(submit_params)
+    elsif params[:pet_id]
+      app_pet = Pet.find(params[:pet_id])
+      @application.pets << app_pet
+    end
+    redirect_to "/applications/#{@application.id}"
   end
 
   def create
@@ -40,5 +45,12 @@ class ApplicationsController < ApplicationController
       .require(:application)
       .permit(:name, :street, :city, :state, :zip_code, :description, :status)
       .with_defaults(status: 'In Progress')
+  end
+
+  def submit_params
+    params
+      .require(:application)
+      .permit(:description, :status)
+      .with_defaults(status: 'Pending')
   end
 end
