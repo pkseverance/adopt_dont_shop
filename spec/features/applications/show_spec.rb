@@ -217,7 +217,9 @@ RSpec.describe "Applications Show Page" do
         @pet_1 = @shelter_1.pets.create(name: 'Mr. Pirate', breed: 'tuxedo shorthair', age: 5, adoptable: true)
         @pet_2 = @shelter_1.pets.create(name: 'Clawdia', breed: 'shorthair', age: 3, adoptable: true)
         @pet_3 = @shelter_3.pets.create(name: 'Lucille Bald', breed: 'sphynx', age: 8, adoptable: true)
-
+        @pet_4 = @shelter_3.pets.create(name: 'Fluffy', breed: 'tabby', age: 4, adoptable: true)
+        @pet_5 = @shelter_1.pets.create(name: 'Mr. Fluff', breed: 'tabby', age: 4, adoptable: true)
+  
         @nigel = Application.create!(
           name: 'Nigel',
           street: '1234 Turing Pwky',
@@ -284,6 +286,34 @@ RSpec.describe "Applications Show Page" do
           click_button('Submit Application')
 
           expect(current_path).to eq("/applications/#{@nigel.id}")
+        end
+      end
+
+      describe 'And I search for Pets by name' do
+        it 'Then I see any pet whose name PARTIALLY matches my search' do
+          visit "/applications/#{@nigel.id}"
+
+          fill_in('Search for Pets', with: "Flu")
+          click_button('Submit')
+
+          within('section#add_pet') do
+            expect(page).to have_content("#{@pet_4.name}")
+            expect(page).to have_content("#{@pet_5.name}")
+          end
+        end
+      end
+
+      describe 'And I search for Pets by name' do
+        it 'Then my search is case insensitive' do
+          visit "/applications/#{@nigel.id}"
+
+          fill_in('Search for Pets', with: "fLuFf")
+          click_button('Submit')
+
+          within('section#add_pet') do
+            expect(page).to have_content("#{@pet_4.name}")
+            expect(page).to have_content("#{@pet_5.name}")
+          end
         end
       end
     end
