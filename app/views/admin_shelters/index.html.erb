@@ -1,0 +1,7 @@
+<h1>Admin Shelters Idex</h1>
+
+<% @shelters.each do |shelter| %>
+   <h3><%= shelter.name %></h3>
+   <p><%= shelter.city %></p>
+   <p><%= shelter.rank %></p>
+<% end %>
