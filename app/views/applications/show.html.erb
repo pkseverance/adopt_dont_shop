@@ -40,13 +40,14 @@
 <% end %>
 
   
-
-<section id='submit_app'>
-  <h2>Finalize Application</h2>
-  <%= form_with model: @application, url: "/applications/#{@application.id}", method: :patch, local: true do |form| %>
-    <%= form.label :description, "Description of why you'd be a good home for this pet(s)" %> <br>
-    <%= form.text_area :description %>
-    <%= form.submit 'Submit Application' %>
-  <% end %>
-</section>
+<% if @applicationpets.count > 0 %>
+    <section id='submit_app'>
+      <h2>Finalize Application</h2>
+      <%= form_with model: @application, url: "/applications/#{@application.id}", method: :patch, local: true do |form| %>
+        <%= form.label :description, "Description of why you'd be a good home for this pet(s)" %> <br>
+        <%= form.text_area :description %>
+        <%= form.submit 'Submit Application' %>
+      <% end %>
+    </section>
+<% end %>
 
