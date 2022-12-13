@@ -46,9 +46,9 @@ RSpec.describe 'admin application show page' do
       it 'for every pet that the application is for, I see a button to approve the application for that specific pet' do
         within('#app_pets') do
           expect(page).to have_content(@pet_1.name)
-          expect(page).to have_button("Approve Adoption for #{@pet_1.name}}")
+          expect(page).to have_button("Approve Adoption for #{@pet_1.name}")
           expect(page).to have_content(@pet_2.name)
-          expect(page).to have_button("Approve Adoption for #{@pet_2.name}}")
+          expect(page).to have_button("Approve Adoption for #{@pet_2.name}")
         end
       end
       
