@@ -38,7 +38,6 @@ RSpec.describe 'Application New Form Page' do
           expect(page).to have_content(@joey.city)
           expect(page).to have_content(@joey.state)
           expect(page).to have_content(@joey.zip_code)
-          expect(page).to have_content(@joey.description)
         end
 
         it 'Then I see an indicator that this application is "In Progress"' do
