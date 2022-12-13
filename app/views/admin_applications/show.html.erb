@@ -1,0 +1,15 @@
+<h1>Admin Application Show Page</h1>
+
+<section id='app_pets'>
+  <h2>Pets to Approve for This Application</h2>
+  <% @application_pets.each do |pet| %>
+  <p>
+    <%= link_to pet.name, "/pets/#{pet.id}" %> 
+    <% if pet.adoption_status(@application.id) == 'Pending' %>
+    <%= button_to "Approve Adoption for #{pet.name}", "/admin/applications/#{@application.id}",params: {pet_id: pet.id, adoption_status: 'Approved'}, method: :patch %>
+    <% else %>
+    <%= pet.name %> Adoption <%= pet.adoption_status(@application.id) %>
+    <% end %>
+  </p>
+  <% end %>
+</section>
