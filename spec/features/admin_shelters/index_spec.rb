@@ -18,6 +18,21 @@ RSpec.describe 'Admin Shelters Index' do
         @shelter_1 = Shelter.create(name: 'Aurora shelter', city: 'Aurora, CO', foster_program: false, rank: 9)
         @shelter_2 = Shelter.create(name: 'RGV animal shelter', city: 'Harlingen, TX', foster_program: false, rank: 5)
         @shelter_3 = Shelter.create(name: 'Fancy pets of Colorado', city: 'Denver, CO', foster_program: true, rank: 10)
+        @pet_3 = @shelter_3.pets.create(name: 'Lucille Bald', breed: 'sphynx', age: 8, adoptable: true)
+
+        @patricia = Application.create!(
+          name: 'Patricia',
+          street: '4567 Dev Street',
+          city: 'Denver',
+          state: 'CO',
+          zip_code: 98765,
+          description: 'Great with pets.',
+          status: 'Pending'
+        )
+
+        @patricia.pets << @pet_3
+        @pet_3.applications << @patricia
+
       end
       it 'Then I see all Shelters in the system listed in reverse alphabetical order by name' do
         visit '/admin/shelters'
@@ -27,6 +42,18 @@ RSpec.describe 'Admin Shelters Index' do
         expect(page).to have_content(@shelter_3.name)
         expect(@shelter_2.name).to appear_before(@shelter_3.name)
         expect(@shelter_3.name).to appear_before(@shelter_1.name)
+      end
+
+      describe 'Then I see a section for Shelters with Pending Applications' do
+
+        it 'And in this section I see the name of every shelter that has a pending application' do
+          visit '/admin/shelters'
+
+          within('section#pending_apps') do
+            expect(page).to have_content('Shelters with Pending Applications')
+            expect(page).to have_content(@shelter_3.name)
+          end
+        end
       end
     end
   end
