@@ -28,7 +28,7 @@ RSpec.describe 'admin application show page' do
           state: 'TX',
           zip_code: 54321,
           description: 'Loving family with financial stability',
-          status: 'In Progress'
+          status: 'Pending'
         )
         @patricia = Application.create!(
           name: 'Patricia',
@@ -41,6 +41,7 @@ RSpec.describe 'admin application show page' do
         )
         @nigel.pets << @pet_1
         @nigel.pets << @pet_2
+        @patricia.pets << @pet_1
         visit "/admin/applications/#{@nigel.id}"
       end
       it 'for every pet that the application is for, I see a button to approve the application for that specific pet' do
