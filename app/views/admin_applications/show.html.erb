@@ -7,6 +7,7 @@
     <%= link_to pet.name, "/pets/#{pet.id}" %> 
     <% if pet.adoption_status(@application.id) == 'Pending' %>
     <%= button_to "Approve Adoption for #{pet.name}", "/admin/applications/#{@application.id}",params: {pet_id: pet.id, adoption_status: 'Approved'}, method: :patch %>
+    <%= button_to "Reject Adoption for #{pet.name}", "/admin/applications/#{@application.id}",params: {pet_id: pet.id, adoption_status: 'Rejected'}, method: :patch %>
     <% else %>
     <%= pet.name %> Adoption <%= pet.adoption_status(@application.id) %>
     <% end %>
