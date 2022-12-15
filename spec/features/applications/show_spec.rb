@@ -226,7 +226,6 @@ RSpec.describe "Applications Show Page" do
           city: 'San Antonio',
           state: 'TX',
           zip_code: 54321,
-          description: 'Loving family with financial stability',
           status: 'In Progress'
         )
         @patricia = Application.create!(
@@ -241,15 +240,15 @@ RSpec.describe "Applications Show Page" do
       end
 
       describe 'And I have added one or more pets to the application' do
-        it 'Then I see a section to submit my application' do
-
+        before :each do
           visit "/applications/#{@nigel.id}"
           expect(page).to have_content('In Progress')
 
           fill_in('Search for Pets', with: "#{@pet_3.name}")
           click_button('Submit')
           click_button('Adopt this Pet')
-
+        end
+        it 'Then I see a section to submit my application' do
           within('section#submit_app') do
             expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
             expect(page).to have_button('Submit Application')
@@ -269,12 +268,38 @@ RSpec.describe "Applications Show Page" do
 
           expect(page).to_not have_content('Add a pet to this application')
         end
+
+        describe '(Non User Story Edge Case)' do
+          describe "If I don't fill in the description and click submit" do
+            it "I see an error and stay on the current page and the application is still 'In Progress'" do
+              within('section#submit_app') do
+                expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
+                expect(page).to have_button('Submit Application')
+              end
+  
+              click_button('Submit Application')
+
+              expect(page).to have_content('In Progress')
+              expect(page).to_not have_content('Pending')
+              expect(page).to have_content("Description:")
+              expect(page).to have_content("Please enter your description of why you'd be a good home for this pet(s)")
+
+              within('section#submit_app') do
+                expect(page).to have_field("Description of why you'd be a good home for this pet(s)")
+                expect(page).to have_button('Submit Application')
+              end
+            end
+          end
+        end
       end
 
       describe 'And I have not added any pets to the application' do
         it 'Then I do not see a section to submit my application' do
           visit "/applications/#{@nigel.id}"
+
           expect(page).to_not have_content('Finalize Application')
+          expect(page).to_not have_field("Description of why you'd be a good home for this pet(s)")
+          expect(page).to_not have_button('Submit Application')
 
           fill_in('Search for Pets', with: "#{@pet_3.name}")
           click_button('Submit')
