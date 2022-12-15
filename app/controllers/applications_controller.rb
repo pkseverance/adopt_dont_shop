@@ -18,7 +18,7 @@ class ApplicationsController < ApplicationController
     @application = Application.find(params[:id])
     # binding.pry
     if params[:commit] == "Submit Application"
-      @application.update(submit_params)
+      flash[:error] = "Please enter your description of why you'd be a good home for this pet(s)" unless @application.update(submit_params)
     elsif params[:pet_id]
       app_pet = Pet.find(params[:pet_id])
       @application.pets << app_pet
