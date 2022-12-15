@@ -261,6 +261,7 @@ RSpec.describe "Applications Show Page" do
           
           expect(page).to have_content('Pending')
           expect(page).to have_content('Description: I love pets')
+          expect(page).to_not have_content("Please enter your description of why you'd be a good home for this pet(s)")
 
           within('section#app_pets') do
             expect(page).to have_content("#{@pet_3.name}")
